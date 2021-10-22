@@ -1,0 +1,175 @@
+{
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			158,
+			158,
+			158,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": null,
+		"fog_color": [
+			0,
+			0,
+			0,
+			0
+		],
+		"fog_far": 0.0,
+		"fog_near": 0.0,
+		"irradiance_map": "core/pbr/probe.hdr.irradiance",
+		"radiance_map": "core/pbr/probe.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "poppy_elements/poppy_servo_moteur_with_cylinder_part/poppy_servo_moteur_cylinder_part.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_simple_connection_pivot/poppy_simple_connection_pivot.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_servo_moteur/poppy_servo_moteur.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_simple_connection/poppy_simple_connection.scn"
+		}
+	],
+	"key_values": null,
+	"nodes": [
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"instance": 3,
+			"name": "poppy_simple_connection"
+		},
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 1,
+			"instance": 2,
+			"name": "poppy_servo_moteur"
+		},
+		{
+			"components": [
+				2,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"instance": 1,
+			"name": "poppy_simple_connection_pivot"
+		},
+		{
+			"components": [
+				3,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 3,
+			"instance": 0,
+			"name": "poppy_servo_moteur_cylinder_part"
+		}
+	],
+	"transforms": [
+		{
+			"parent": null,
+			"pos": [
+				-8.678848195664557e-10,
+				0.0,
+				7.649440726601299e-17
+			],
+			"rot": [
+				90.0,
+				90.00000762939453,
+				-5.008955668017734e-06
+			],
+			"scl": [
+				0.9999998807907104,
+				0.9999997615814209,
+				0.9999998807907104
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.015735000371932983,
+				0.041264668107032776,
+				2.677295884989661e-10
+			],
+			"rot": [
+				90.0,
+				-8.651421921967994e-06,
+				8.651421921967994e-06
+			],
+			"scl": [
+				0.9999995231628418,
+				0.9999990463256836,
+				0.9999995231628418
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				-0.014088604599237442,
+				0.042216986417770386,
+				4.204938175433881e-09
+			],
+			"rot": [
+				90.0,
+				179.9999542236328,
+				-179.9999542236328
+			],
+			"scl": [
+				0.9999998807907104,
+				0.9999997019767761,
+				0.9999998211860657
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.013580217026174068,
+				0.053897708654403687,
+				-1.1872204330742875e-09
+			],
+			"rot": [
+				-0.0,
+				90.0,
+				0.0
+			],
+			"scl": [
+				0.999999463558197,
+				1.0,
+				0.999999463558197
+			]
+		}
+	]
+}

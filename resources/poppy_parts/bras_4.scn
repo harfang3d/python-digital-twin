@@ -1,0 +1,175 @@
+{
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			158,
+			158,
+			158,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": null,
+		"fog_color": [
+			0,
+			0,
+			0,
+			0
+		],
+		"fog_far": 0.0,
+		"fog_near": 0.0,
+		"irradiance_map": "core/pbr/probe_autoshop_middle.hdr.irradiance",
+		"radiance_map": "core/pbr/probe_autoshop_middle.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "poppy_elements/poppy_servo_moteur_with_cylinder_part/poppy_servo_moteur_cylinder_part.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_simple_connection_pivot/poppy_simple_connection_pivot.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_simple_connection/poppy_simple_connection.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_servo_moteur/poppy_servo_moteur.scn"
+		}
+	],
+	"key_values": null,
+	"nodes": [
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"instance": 3,
+			"name": "poppy_servo_moteur"
+		},
+		{
+			"components": [
+				3,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 1,
+			"instance": 0,
+			"name": "poppy_servo_moteur_cylinder_part"
+		},
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"instance": 2,
+			"name": "poppy_simple_connection"
+		},
+		{
+			"components": [
+				2,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 3,
+			"instance": 1,
+			"name": "poppy_simple_connection_pivot"
+		}
+	],
+	"transforms": [
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				90.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.015735000371932983,
+				0.035224221646785736,
+				2.677295884989661e-10
+			],
+			"rot": [
+				90.0,
+				179.99996948242188,
+				-179.99996948242188
+			],
+			"scl": [
+				0.9999992847442627,
+				0.9999985098838806,
+				0.9999992251396179
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				-0.014088604599237442,
+				0.036176539957523346,
+				4.204938175433881e-09
+			],
+			"rot": [
+				90.0,
+				-2.231179860245902e-05,
+				2.2311796783469617e-05
+			],
+			"scl": [
+				0.9999995231628418,
+				0.9999990463256836,
+				0.9999995231628418
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.013580217026174068,
+				0.047945767641067505,
+				-1.1872204330742875e-09
+			],
+			"rot": [
+				-0.0,
+				90.0,
+				0.0
+			],
+			"scl": [
+				0.9999992847442627,
+				1.0,
+				0.9999992847442627
+			]
+		}
+	]
+}

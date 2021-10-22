@@ -1,0 +1,141 @@
+{
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			158,
+			158,
+			158,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": null,
+		"fog_color": [
+			0,
+			0,
+			0,
+			0
+		],
+		"fog_far": 0.0,
+		"fog_near": 0.0,
+		"irradiance_map": "core/pbr/probe_autoshop_middle.hdr.irradiance",
+		"radiance_map": "core/pbr/probe_autoshop_middle.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "poppy_elements/poppy_servo_moteur/poppy_servo_moteur.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_double_connection_u_little/poppy_double_connection_u_little.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_servo_moteur_with_cylinder_part/poppy_servo_moteur_cylinder_part.scn"
+		}
+	],
+	"key_values": null,
+	"nodes": [
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"instance": 0,
+			"name": "poppy_servo_moteur"
+		},
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"instance": 1,
+			"name": "poppy_double_connection_u_little"
+		},
+		{
+			"components": [
+				2,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 4,
+			"instance": 2,
+			"name": "poppy_servo_moteur_cylinder_part"
+		}
+	],
+	"transforms": [
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				90.0,
+				90.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.025615107268095016,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				5.965298807414711e-19,
+				0.031737323850393295,
+				-3.3374494834426116e-10
+			],
+			"rot": [
+				90.0,
+				-5.008956122765085e-06,
+				5.008955668017734e-06
+			],
+			"scl": [
+				0.9999998807907104,
+				0.9999997615814209,
+				0.9999998807907104
+			]
+		}
+	]
+}

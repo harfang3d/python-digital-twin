@@ -1,0 +1,5 @@
+__pycache__
+/app/bin/content
+*.fbm
+/resources_compiled
+/app/resources_compiled

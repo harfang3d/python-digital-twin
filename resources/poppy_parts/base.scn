@@ -1,0 +1,107 @@
+{
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			158,
+			158,
+			158,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": null,
+		"fog_color": [
+			0,
+			0,
+			0,
+			0
+		],
+		"fog_far": 0.0,
+		"fog_near": 0.0,
+		"irradiance_map": "core/pbr/probe_autoshop_middle.hdr.irradiance",
+		"radiance_map": "core/pbr/probe_autoshop_middle.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "poppy_elements/poppy_arm_base/poppy_arm_base.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_servo_moteur/poppy_servo_moteur.scn"
+		}
+	],
+	"key_values": null,
+	"nodes": [
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"instance": 1,
+			"name": "poppy_servo_moteur"
+		},
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"instance": 0,
+			"name": "poppy_arm_base"
+		}
+	],
+	"transforms": [
+		{
+			"parent": 1,
+			"pos": [
+				2.1599446426989743e-06,
+				0.01630319654941559,
+				-7.842631748644635e-05
+			],
+			"rot": [
+				-5.008957941754488e-06,
+				-179.99998474121094,
+				-179.99998474121094
+			],
+			"scl": [
+				0.9999994039535522,
+				0.9999996423721313,
+				0.9999996423721313
+			]
+		},
+		{
+			"parent": 1,
+			"pos": [
+				0.0,
+				0.0028627561405301094,
+				-3.826990723609924e-05
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		}
+	]
+}

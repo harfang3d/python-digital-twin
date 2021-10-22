@@ -1,0 +1,1053 @@
+{
+	"cameras": [
+		{
+			"fov": 0.5654867887496948,
+			"ortho": false,
+			"size": 1.0,
+			"zrange": {
+				"zfar": 1000.0,
+				"znear": 0.009999999776482582
+			}
+		}
+	],
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			48,
+			48,
+			48,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": 2,
+		"fog_color": [
+			48,
+			48,
+			48,
+			255
+		],
+		"fog_far": 50.0,
+		"fog_near": 20.0,
+		"irradiance_map": "core/pbr/abandoned_greenhouse_1k.hdr.irradiance",
+		"radiance_map": "core/pbr/abandoned_greenhouse_1k.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "poppy_parts/bras_2.scn"
+		},
+		{
+			"name": "poppy_parts/bras_1.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "poppy_parts/support_camera.scn"
+		},
+		{
+			"name": "poppy_parts/bras_6.scn"
+		},
+		{
+			"name": "poppy_parts/bras_5.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "core_library/primitives/grid.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_base/poppy_base.scn"
+		},
+		{
+			"name": "poppy_parts/base.scn"
+		},
+		{
+			"name": "poppy_parts/bras_3.scn"
+		},
+		{
+			"name": "poppy_parts/bras_4.scn"
+		}
+	],
+	"key_values": null,
+	"lights": [
+		{
+			"diffuse": [
+				2500,
+				2000,
+				1500,
+				255
+			],
+			"inner_angle": 9.999999747378752e-05,
+			"outer_angle": 0.5235987901687622,
+			"priority": 0.0,
+			"pssm_split": [
+				10.0,
+				50.0,
+				100.0,
+				500.0
+			],
+			"radius": 0.0,
+			"shadow_bias": 9.999999747378752e-06,
+			"shadow_type": "map",
+			"specular": [
+				0,
+				0,
+				0,
+				255
+			],
+			"type": "spot"
+		}
+	],
+	"nodes": [
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				0,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"name": "Light"
+		},
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 1,
+			"instance": 21,
+			"name": "grid"
+		},
+		{
+			"components": [
+				2,
+				0,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"name": "Camera"
+		},
+		{
+			"components": [
+				3,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 3,
+			"instance": 20,
+			"name": "grid"
+		},
+		{
+			"components": [
+				4,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 4,
+			"instance": 19,
+			"name": "grid"
+		},
+		{
+			"components": [
+				6,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 5,
+			"instance": 0,
+			"name": "grid"
+		},
+		{
+			"components": [
+				5,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 6,
+			"instance": 18,
+			"name": "grid"
+		},
+		{
+			"components": [
+				7,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 7,
+			"instance": 1,
+			"name": "grid"
+		},
+		{
+			"components": [
+				9,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 8,
+			"instance": 3,
+			"name": "grid"
+		},
+		{
+			"components": [
+				8,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 9,
+			"instance": 2,
+			"name": "grid"
+		},
+		{
+			"components": [
+				10,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 10,
+			"instance": 4,
+			"name": "grid"
+		},
+		{
+			"components": [
+				11,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 11,
+			"instance": 5,
+			"name": "grid"
+		},
+		{
+			"components": [
+				12,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 12,
+			"instance": 6,
+			"name": "grid"
+		},
+		{
+			"components": [
+				14,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 13,
+			"instance": 8,
+			"name": "grid"
+		},
+		{
+			"components": [
+				13,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 14,
+			"instance": 7,
+			"name": "grid"
+		},
+		{
+			"components": [
+				15,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 15,
+			"instance": 9,
+			"name": "grid"
+		},
+		{
+			"components": [
+				17,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 16,
+			"instance": 14,
+			"name": "grid"
+		},
+		{
+			"components": [
+				16,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 17,
+			"instance": 10,
+			"name": "grid"
+		},
+		{
+			"components": [
+				18,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 18,
+			"instance": 13,
+			"name": "grid"
+		},
+		{
+			"components": [
+				19,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 19,
+			"name": "grids"
+		},
+		{
+			"components": [
+				20,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 20,
+			"instance": 22,
+			"name": "socle"
+		},
+		{
+			"components": [
+				21,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 21,
+			"instance": 23,
+			"name": "base"
+		},
+		{
+			"components": [
+				23,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 22,
+			"instance": 15,
+			"name": "support_camera"
+		},
+		{
+			"components": [
+				22,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 23,
+			"instance": 12,
+			"name": "bras_1"
+		},
+		{
+			"components": [
+				26,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 24,
+			"instance": 11,
+			"name": "bras_2"
+		},
+		{
+			"components": [
+				24,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 25,
+			"instance": 24,
+			"name": "bras_3"
+		},
+		{
+			"components": [
+				25,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 26,
+			"instance": 25,
+			"name": "bras_4"
+		},
+		{
+			"components": [
+				27,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 27,
+			"instance": 16,
+			"name": "bras_6"
+		},
+		{
+			"components": [
+				28,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 28,
+			"instance": 17,
+			"name": "bras_5"
+		}
+	],
+	"transforms": [
+		{
+			"parent": null,
+			"pos": [
+				3.3959999084472656,
+				5.289000034332275,
+				1.5980000495910645
+			],
+			"rot": [
+				47.248661041259766,
+				-133.5301055908203,
+				-138.88323974609375
+			],
+			"scl": [
+				0.9999989867210388,
+				0.9999985098838806,
+				0.999998927116394
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.2605239450931549,
+				0.16340148448944092,
+				-0.3370971977710724
+			],
+			"rot": [
+				20.82195281982422,
+				-37.69532012939453,
+				-1.9424419017699535e-10
+			],
+			"scl": [
+				0.999957263469696,
+				0.9993643164634705,
+				0.9993442893028259
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-1.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				1.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				0.0,
+				0.0,
+				-1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-1.0,
+				0.0,
+				-1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				1.0,
+				0.0,
+				-1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				0.0,
+				0.0,
+				1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-1.0,
+				0.0,
+				1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				1.0,
+				0.0,
+				1.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-3.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				3.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				0.0,
+				0.0,
+				3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				3.0,
+				0.0,
+				3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-3.0,
+				0.0,
+				3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				0.0,
+				0.0,
+				-3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				3.0,
+				0.0,
+				-3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": 19,
+			"pos": [
+				-3.0,
+				0.0,
+				-3.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				3.0,
+				3.0,
+				3.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				10.0,
+				10.0,
+				10.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.001366953831166029,
+				3.826990723609924e-05
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				10.0,
+				10.0,
+				10.0
+			]
+		},
+		{
+			"parent": 20,
+			"pos": [
+				0.0,
+				-2.721440978348255e-06,
+				-3.5658013075590134e-06
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 21,
+			"pos": [
+				0.0,
+				0.029700787737965584,
+				-3.470410592854023e-05
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 21,
+			"pos": [
+				-5.893816705793142e-05,
+				0.017278600484132767,
+				-0.024006081745028496
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 24,
+			"pos": [
+				0.0,
+				0.053854480385780334,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": 25,
+			"pos": [
+				0.0,
+				0.04502222687005997,
+				-2.1807469163803717e-09
+			],
+			"rot": [
+				-90.0,
+				180.0,
+				180.0
+			],
+			"scl": [
+				1.0,
+				0.9999999403953552,
+				0.9999999403953552
+			]
+		},
+		{
+			"parent": 23,
+			"pos": [
+				0.0,
+				0.025668833404779434,
+				0.0
+			],
+			"rot": [
+				-0.0,
+				0.019782328978180885,
+				0.0
+			],
+			"scl": [
+				0.9999998211860657,
+				0.9999997615814209,
+				0.9999998211860657
+			]
+		},
+		{
+			"parent": 28,
+			"pos": [
+				1.9046684229806488e-09,
+				0.06391178071498871,
+				-1.6957521438598633e-05
+			],
+			"rot": [
+				-6.920888341588327e-12,
+				9.706284649243838e-20,
+				-4.88532998776936e-12
+			],
+			"scl": [
+				1.0,
+				0.9999997615814209,
+				0.9999996423721313
+			]
+		},
+		{
+			"parent": 26,
+			"pos": [
+				-8.404645868154148e-10,
+				0.04798626899719238,
+				1.971423625946045e-05
+			],
+			"rot": [
+				-7.327998451100992e-12,
+				2.9118835853155614e-19,
+				0.0
+			],
+			"scl": [
+				0.9999998807907104,
+				0.9999998807907104,
+				0.9999999403953552
+			]
+		}
+	]
+}

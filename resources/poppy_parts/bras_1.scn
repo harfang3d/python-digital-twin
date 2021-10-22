@@ -1,0 +1,141 @@
+{
+	"canvas": {
+		"clear_color": true,
+		"clear_z": true,
+		"color": [
+			158,
+			158,
+			158,
+			255
+		]
+	},
+	"environment": {
+		"ambient": [
+			0,
+			0,
+			0,
+			0
+		],
+		"brdf_map": "core/pbr/brdf.dds",
+		"current_camera": null,
+		"fog_color": [
+			0,
+			0,
+			0,
+			0
+		],
+		"fog_far": 0.0,
+		"fog_near": 0.0,
+		"irradiance_map": "core/pbr/probe.hdr.irradiance",
+		"radiance_map": "core/pbr/probe.hdr.radiance"
+	},
+	"instances": [
+		{
+			"name": "poppy_elements/poppy_servo_moteur_with_cylinder_part/poppy_servo_moteur_cylinder_part.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_double_connection_u_big/poppy_double_connection_u_big.scn"
+		},
+		{
+			"name": "poppy_elements/poppy_servo_moteur_with_cylinder_part/poppy_servo_moteur_cylinder_part.scn"
+		}
+	],
+	"key_values": null,
+	"nodes": [
+		{
+			"components": [
+				1,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 0,
+			"instance": 1,
+			"name": "poppy_double_connection_u_big"
+		},
+		{
+			"components": [
+				0,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 1,
+			"instance": 0,
+			"name": "poppy_servo_moteur_cylinder_part"
+		},
+		{
+			"components": [
+				2,
+				4294967295,
+				4294967295,
+				4294967295,
+				4294967295
+			],
+			"disabled": false,
+			"idx": 2,
+			"instance": 2,
+			"name": "poppy_servo_moteur_cylinder_part"
+		}
+	],
+	"transforms": [
+		{
+			"parent": null,
+			"pos": [
+				0.01350625604391098,
+				0.02547188103199005,
+				-1.1807544941788706e-09
+			],
+			"rot": [
+				-0.0,
+				90.0,
+				0.0
+			],
+			"scl": [
+				0.9999997615814209,
+				1.0,
+				0.9999997615814209
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"rot": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"scl": [
+				1.0,
+				1.0,
+				1.0
+			]
+		},
+		{
+			"parent": null,
+			"pos": [
+				2.4934997782111168e-05,
+				-8.450844325125217e-05,
+				3.367634615614179e-09
+			],
+			"rot": [
+				-90.0,
+				-179.99996948242188,
+				-179.99996948242188
+			],
+			"scl": [
+				0.9999995231628418,
+				0.9999994039535522,
+				0.9999994039535522
+			]
+		}
+	]
+}

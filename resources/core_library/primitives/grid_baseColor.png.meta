@@ -1,0 +1,10 @@
+{
+	"profiles": {
+		"default": {
+			"compression": "BC1",
+			"mag-filter": "Anisotropic",
+			"min-filter": "Anisotropic",
+			"sRGB": false
+		}
+	}
+}
