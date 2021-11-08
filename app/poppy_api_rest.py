@@ -317,43 +317,6 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	for id, m in enumerate(hg_motors):
 		hg_m = hg_motors[id]
 		v = hg_m["v"]
-		def DrawTriangle(t, percent_colored=-1, z=1):
-			# cache texture
-			mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, z), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
-
-			pos = hg.GetT(mat)
-			axis_x = hg.GetX(mat) * quad_width / 2
-			axis_y = hg.GetY(mat) * quad_height / 2
-
-			quad_vtx = hg.Vertices(vtx_layout, 4)
-			quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-			quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-			quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-			quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
-			quad_idx = [0, 3, 2, 0, 2, 1]
-
-			color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(percent_colored, 0, 0, 1.0))
-
-			hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [t], render_state_quad)
-
-		def DrawTriangle2(percent_colored=-1, z=1):
-			# cache texture
-			mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, z), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
-
-			pos = hg.GetT(mat)
-			axis_x = hg.GetX(mat) * quad_width / 2
-			axis_y = hg.GetY(mat) * quad_height / 2
-
-			quad_vtx = hg.Vertices(vtx_layout, 4)
-			quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-			quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-			quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-			quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
-			quad_idx = [0, 3, 2, 0, 2, 1]
-
-			progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
-
-			hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [progress], [texture_asset2], render_state_quad)
 
 		# percent from acceleration
 		p = rangeadjust_clamp(abs(m["acc"]), 0, 9999, 0, 1)
@@ -363,7 +326,24 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		quad_height = 140
 		pos_in_pixel = hg.iVec2(int(res_x - quad_width*1.1), int((res_y*0.05) + (res_y*0.9)/len(hg_motors) * id + (quad_height*1.2)/2))
 
-		DrawTriangle2()
+		#setup quad vertices
+		mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+
+		pos = hg.GetT(mat)
+		axis_x = hg.GetX(mat) * quad_width / 2
+		axis_y = hg.GetY(mat) * quad_height / 2
+
+		quad_vtx = hg.Vertices(vtx_layout, 4)
+		quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+		quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+		quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+		quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+		quad_idx = [0, 3, 2, 0, 2, 1]
+
+		# draw quad
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
+
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [progress], [texture_asset2], render_state_quad)
 
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
@@ -391,7 +371,10 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		quad_height = 8
 		pos_in_pixel = motor_pos_2D
 
-		DrawTriangle(texture_point)
+		color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
+
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_point], render_state_quad)
+
 
 	# if roboto was not found, add a red text to tell everybody
 	if url == "":
