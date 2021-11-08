@@ -300,7 +300,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		m_world = hg.TransformationMat4(m_pos, m_world_rot, m_world_scale) * hg.RotationMat4(hg_m["offset_rotation"])
 		hg_m["centroid_jauge_world"] = m_world
 
-		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(int(rangeadjust_clamp(v, -180, 180, 0, 100))/100, 0, 0, 0))
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
 
 		hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_rotator, [progress], [texture_asset1], m_world, render_state_quad_occluded)
 
@@ -351,7 +351,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 			quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
 			quad_idx = [0, 3, 2, 0, 2, 1]
 
-			progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(int(rangeadjust_clamp(v, -180, 180, 0, 100))/100, 0, 0, 0))
+			progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
 
 			hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [progress], [texture_asset2], render_state_quad)
 
