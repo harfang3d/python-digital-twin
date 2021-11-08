@@ -48,8 +48,8 @@ hg.AddAssetsFolder("resources_compiled")
 # AAA render params
 aaa_config = hg.ForwardPipelineAAAConfig()
 aaa_config.temporal_aa_weight = 0.01
-aaa_config.sample_count = 2
-aaa_config.motion_blur = 0.1
+aaa_config.sample_count = 1
+aaa_config.motion_blur = 0.01
 aaa_config.exposure = 1.925
 aaa_config.gamma = 2.45
 pipeline_aaa = hg.CreateForwardPipelineAAAFromAssets("core", aaa_config)
@@ -62,44 +62,22 @@ hg.LoadSceneFromAssets("poppy.scn", scene, res, hg.GetForwardPipelineInfo())
 scene.Update(0)
 
 # load texture for the quads
-texture_angle = []
-texture_percent = []
-texture_axis_percent = []
-texture_axis_percent_big = []
-for i in range(361):
-	target_tex = hg.LoadTextureFromAssets(f"Version degres/V_degres_{i:05}.png", 0)[0]
-	uniform_target_tex = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
-	texture_angle.append(uniform_target_tex)
-
-for i in range(101):
-	target_tex = hg.LoadTextureFromAssets(f"TEXTE_Percent/TEXTE_Percent_{i:05}.png", 0)[0]
-	uniform_target_tex = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
-	texture_percent.append(uniform_target_tex)
-
-	target_tex = hg.LoadTextureFromAssets(f"Mires Alpha/Comp 5_{i:05}.png", 0)[0]
-	uniform_target_tex = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
-	texture_axis_percent.append(uniform_target_tex)
-
-	target_tex = hg.LoadTextureFromAssets(f"Compaxes moteurs 2/Comp grand_{i:05}.png", 0)[0]
-	uniform_target_tex = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
-	texture_axis_percent_big.append(uniform_target_tex)
-
 target_tex = hg.LoadTextureFromAssets("point.png", 0)[0]
 texture_point = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
-target_tex = hg.LoadTextureFromAssets("shaders/gradient-V.png", 0)[0]
-texture_gradient = hg.MakeUniformSetTexture("s_texTextureGradient", target_tex, 1)
+target_tex = hg.LoadTextureFromAssets("Asset_1.png", 0)[0]
+texture_asset1 = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
-target_tex = hg.LoadTextureFromAssets("Masque_Vitesse_Sans.png", 0)[0]
-texture_masque_slider = hg.MakeUniformSetTexture("s_texTexture", target_tex, 2)
+target_tex = hg.LoadTextureFromAssets("Asset_2.png", 0)[0]
+texture_asset2 = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+
 
 # load shaders
 render_state_quad = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
 render_state_quad_occluded = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
 render_state_line = hg.ComputeRenderState(hg.BM_Opaque, hg.DT_Less, hg.FC_Disabled)
+shader_rotator = hg.LoadProgramFromAssets("shaders/rotator")
 shader_for_plane = hg.LoadProgramFromAssets("shaders/texture")
-shader_for_colored_plane = hg.LoadProgramFromAssets("shaders/texture_colored")
-shader_for_gradient_plane = hg.LoadProgramFromAssets("shaders/gradient_colored")
 shader_for_line = hg.LoadProgramFromAssets("shaders/pos_rgb")
 shader_font = hg.LoadProgramFromAssets("core/shader/font")
 vtx_layout = hg.VertexLayoutPosFloatTexCoord0UInt8()
@@ -109,6 +87,7 @@ vtx_line_layout = hg.VertexLayoutPosFloatColorUInt8()
 font = hg.LoadFontFromAssets("Roboto-Regular.ttf", 36, 1024, 1, "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ")
 text_render_state = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Always, hg.FC_Disabled, False)
 font_color = hg.MakeUniformSetValue("u_color", hg.Vec4(1.0, 0.75, 0.2, 1.0))
+font_color_white = hg.MakeUniformSetValue("u_color", hg.Vec4(1.0, 1.0, 1.0, 1.0))
 font_shadow = hg.MakeUniformSetValue("u_color", hg.Vec4(0.0, 0.0, 0.0, 1.0))
 
 # array for each motor node and rotation axis choice
@@ -321,10 +300,9 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		m_world = hg.TransformationMat4(m_pos, m_world_rot, m_world_scale) * hg.RotationMat4(hg_m["offset_rotation"])
 		hg_m["centroid_jauge_world"] = m_world
 
-		if m["axis_tex_big"]:
-			hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_for_plane, [], [texture_axis_percent_big[int(rangeadjust(v, m["lower_limit"], m["upper_limit"], 0, 100))]], m_world, render_state_quad_occluded)
-		else:
-			hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_for_plane, [], [texture_axis_percent[int(rangeadjust(v, m["lower_limit"], m["upper_limit"], 0, 100))]], m_world, render_state_quad_occluded)
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
+
+		hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_rotator, [progress], [texture_asset1], m_world, render_state_quad_occluded)
 
 	# draw 2D jauge
 	# set 2D view
@@ -339,28 +317,6 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	for id, m in enumerate(hg_motors):
 		hg_m = hg_motors[id]
 		v = hg_m["v"]
-		def DrawTriangle(t, percent_colored=-1, z=1):
-			# cache texture
-			mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, z), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
-
-			pos = hg.GetT(mat)
-			axis_x = hg.GetX(mat) * quad_width / 2
-			axis_y = hg.GetY(mat) * quad_height / 2
-
-			quad_vtx = hg.Vertices(vtx_layout, 4)
-			quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-			quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-			quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-			quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
-			quad_idx = [0, 3, 2, 0, 2, 1]
-
-			color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(percent_colored, 0, 0, 1.0))
-
-			if percent_colored != -1:
-				hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_colored_plane, [color], [t, texture_gradient, texture_masque_slider], render_state_quad)
-			else:
-				hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [t], render_state_quad)
-
 
 		# percent from acceleration
 		p = rangeadjust_clamp(abs(m["acc"]), 0, 9999, 0, 1)
@@ -370,7 +326,24 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		quad_height = 140
 		pos_in_pixel = hg.iVec2(int(res_x - quad_width*1.1), int((res_y*0.05) + (res_y*0.9)/len(hg_motors) * id + (quad_height*1.2)/2))
 
-		DrawTriangle(texture_angle[int(clamp(v, -180, 180)+180)]) #, p)
+		#setup quad vertices
+		mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+
+		pos = hg.GetT(mat)
+		axis_x = hg.GetX(mat) * quad_width / 2
+		axis_y = hg.GetY(mat) * quad_height / 2
+
+		quad_vtx = hg.Vertices(vtx_layout, 4)
+		quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+		quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+		quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+		quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+		quad_idx = [0, 3, 2, 0, 2, 1]
+
+		# draw quad
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
+
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [progress], [texture_asset2], render_state_quad)
 
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
@@ -383,15 +356,25 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		# draw percent
 		quad_width = 80
 		quad_height = 40
-		pos_in_pixel.x += 104
-		DrawTriangle(texture_percent[int(rangeadjust_clamp(v, -180, 180, 0, 100))])
+		pos_in_pixel.x -= 30
+		pos_in_pixel.y -= 10
+		mat = hg.TranslationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1))
+		hg.SetS(mat, hg.Vec3(1, -1, 1))
+		hg.DrawText(view_id,
+					font,
+					'{n} °'.format(n = int(rangeadjust_clamp(v, -180, 180, 0, 360))), shader_font, "u_tex", 0,
+					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
+					[font_color_white], [], text_render_state)	
 
 		# draw central point on motor
 		quad_width = 8
 		quad_height = 8
 		pos_in_pixel = motor_pos_2D
 
-		DrawTriangle(texture_point)
+		color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
+
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_point], render_state_quad)
+
 
 	# if roboto was not found, add a red text to tell everybody
 	if url == "":
