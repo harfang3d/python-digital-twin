@@ -1,34 +1,49 @@
 import harfang as hg
+import statistics
 
 d = 5
 
 cam_rot_speed = 0.5
 k_wheel = 10
 
+dtxl = []
+dtyl = []
+
+smoothed_dx = 0
+smoothed_dy = 0
 
 def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, height):
 	global d
+	global dtxl, dtyl, smoothed_dx, smoothed_dy
 	dt_sec = hg.time_to_sec_f(dt)
 
 	k_ar = hg.ComputeAspectRatioX(width, height).x
 
-	state_modified = False
-	if mouse.Down(hg.MB_0):
-		speed = dt_sec * cam_rot_speed
-		delta_x = mouse.DtX()
-		delta_y = -mouse.DtY()
-		if delta_x > 40 or delta_x < -40:
-			delta_x = 0
-		if delta_y > 40 or delta_y < -40:
-			delta_y = 0
-		cam_rot.x += delta_y * speed
-		cam_rot.y += delta_x * speed
+	delta_x = mouse.DtX() if mouse.Down(hg.MB_0) else 0
+	delta_y = -mouse.DtY() if mouse.Down(hg.MB_0) else 0
+	print(delta_x)
+	dtxl.append(delta_x)
+	dtyl.append(delta_y)
+	if len(dtxl) > 5:
+		dtxl.pop(0)
+	if len(dtyl) > 5:
+		dtyl.pop(0)
+	delta_x = statistics.median(dtxl)
+	delta_y = statistics.median(dtyl)
 
-		# clamp X
-		if cam_rot.x > 1.57:
-			cam_rot.x = 1.57
-		if cam_rot.x < 0:
-			cam_rot.x = 0
+	smoothed_dx += (delta_x - smoothed_dx) * 0.1
+	smoothed_dy += (delta_y - smoothed_dy) * 0.1
+
+	state_modified = False
+	speed = dt_sec * cam_rot_speed
+	cam_rot.x += smoothed_dy * speed
+	cam_rot.y += smoothed_dx * speed
+
+	# clamp X
+	if cam_rot.x > 1.57:
+		cam_rot.x = 1.57
+	if cam_rot.x < 0:
+		cam_rot.x = 0
 
 	if keyboard.Down(hg.K_LAlt):
 		if mouse.Down(hg.MB_0):
