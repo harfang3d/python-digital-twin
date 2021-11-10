@@ -12,16 +12,18 @@ dtyl = []
 smoothed_dx = 0
 smoothed_dy = 0
 
+smoothed_rotx = 0
+
+
 def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, height):
 	global d
-	global dtxl, dtyl, smoothed_dx, smoothed_dy
+	global dtxl, dtyl, smoothed_dx, smoothed_dy, smoothed_rotx
 	dt_sec = hg.time_to_sec_f(dt)
 
 	k_ar = hg.ComputeAspectRatioX(width, height).x
 
 	delta_x = mouse.DtX() if mouse.Down(hg.MB_0) else 0
 	delta_y = -mouse.DtY() if mouse.Down(hg.MB_0) else 0
-	print(delta_x)
 	dtxl.append(delta_x)
 	dtyl.append(delta_y)
 	if len(dtxl) > 5:
@@ -40,10 +42,13 @@ def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, hei
 	cam_rot.y += smoothed_dx * speed
 
 	# clamp X
+
 	if cam_rot.x > 1.57:
 		cam_rot.x = 1.57
 	if cam_rot.x < 0:
 		cam_rot.x = 0
+
+
 
 	if keyboard.Down(hg.K_LAlt):
 		if mouse.Down(hg.MB_0):
