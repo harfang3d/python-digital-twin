@@ -17,6 +17,10 @@ def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, hei
 		speed = dt_sec * cam_rot_speed
 		delta_x = mouse.DtX()
 		delta_y = -mouse.DtY()
+		if delta_x > 40 or delta_x < -40:
+			delta_x = 0
+		if delta_y > 40 or delta_y < -40:
+			delta_y = 0
 		cam_rot.x += delta_y * speed
 		cam_rot.y += delta_x * speed
 
