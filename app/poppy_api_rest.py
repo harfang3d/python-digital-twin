@@ -290,11 +290,11 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		m_world_scale = hg.GetS(m_world)
 
 		if hg_m["offset_slider"].x == 1:
-			m_pos += hg.GetX(m_world)*0.03
+			m_pos += hg.GetX(m_world) * 0.03
 		if hg_m["offset_slider"].y == 1:
-			m_pos += hg.GetZ(m_world)*-0.015
+			m_pos += hg.GetZ(m_world) * -0.015
 		if hg_m["offset_slider"].z == 1:
-			m_pos += hg.GetY(m_world)*0.003
+			m_pos += hg.GetY(m_world) * 0.003
 
 		# draw jauge in axis
 		m_world = hg.TransformationMat4(m_pos, m_world_rot, m_world_scale) * hg.RotationMat4(hg_m["offset_rotation"])
@@ -323,7 +323,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# texture quad
 		quad_width = quad_height = res_y * 0.12
-		pos_in_pixel = hg.iVec2(int(res_x - quad_width*1.1), int((res_y*0.05) + (res_y*0.9)/len(hg_motors) * id + (quad_height*1.2)/2))
+		pos_in_pixel = hg.iVec2(int(res_x - quad_width * 1.1), int((res_y * 0.05) + (res_y * 0.9)/len(hg_motors) * id + (quad_height * 1.2) / 2))
 
 		#setup quad vertices
 		mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
