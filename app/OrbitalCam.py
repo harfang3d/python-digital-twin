@@ -1,5 +1,5 @@
 import harfang as hg
-import statistics
+from statistics import median
 
 d = 5
 
@@ -30,8 +30,8 @@ def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, hei
 		dtxl.pop(0)
 	if len(dtyl) > 5:
 		dtyl.pop(0)
-	delta_x = statistics.median(dtxl)
-	delta_y = statistics.median(dtyl)
+	delta_x = median(dtxl)
+	delta_y = median(dtyl)
 
 	smoothed_dx += (delta_x - smoothed_dx) * 0.1
 	smoothed_dy += (delta_y - smoothed_dy) * 0.1
