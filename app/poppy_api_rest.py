@@ -356,7 +356,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		pos_in_pixel.x -= int(res_y / 35)
 		pos_in_pixel.y -= 10
 		mat = hg.TranslationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1))
-		hg.SetS(mat, hg.Vec3(res_y/1080, -res_y/1080, res_y/1080))
+		hg.SetS(mat, hg.Vec3(res_y / 1080, -res_y / 1080, res_y / 1080))
 
 		hg.DrawText(view_id,
 					font,
