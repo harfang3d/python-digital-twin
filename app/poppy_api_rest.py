@@ -322,8 +322,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		p = rangeadjust_clamp(abs(m["acc"]), 0, 9999, 0, 1)
 
 		# texture quad
-		quad_width = 140
-		quad_height = 140
+		quad_width = quad_height = res_y * 0.12
 		pos_in_pixel = hg.iVec2(int(res_x - quad_width*1.1), int((res_y*0.05) + (res_y*0.9)/len(hg_motors) * id + (quad_height*1.2)/2))
 
 		#setup quad vertices
@@ -354,12 +353,11 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		hg.DrawLines(view_id, vtx, shader_for_line)
 
 		# draw percent
-		quad_width = 80
-		quad_height = 40
-		pos_in_pixel.x -= 30
+		pos_in_pixel.x -= int(res_y / 35)
 		pos_in_pixel.y -= 10
 		mat = hg.TranslationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1))
-		hg.SetS(mat, hg.Vec3(1, -1, 1))
+		hg.SetS(mat, hg.Vec3(res_y / 1080, -res_y / 1080, res_y / 1080))
+
 		hg.DrawText(view_id,
 					font,
 					'{n} °'.format(n = int(rangeadjust_clamp(v, -180, 180, 0, 360))), shader_font, "u_tex", 0,
