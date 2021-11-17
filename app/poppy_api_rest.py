@@ -143,6 +143,8 @@ imgui_img_prg = hg.LoadProgramFromAssets("core/shader/imgui_image")
 hg.ImGuiInit(10, imgui_prg, imgui_img_prg)
 
 app_clock = 0
+app_status = "dancing"
+robot_status = "get_value_from_real_robot"
 
 
 def get_v_from_dancing(id_robot):
@@ -209,10 +211,33 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	url_set_motor_pos = url + "/motors/set/goto/"
 	send_dt = 1/10 # send information to the poppy every send_dt
 
+	# get values from the real robot
+	if robot_status == "get_value_from_real_robot":
+		timer_requests_not_overload += hg.time_to_sec_f(dt)
+		if timer_requests_not_overload > send_dt:
+			timer_requests_not_overload = 0
+
+			if url != "":
+				try:
+					r = requests.get(url + "/motors/get/positions").text
+					for id, m in enumerate(hg_motors):
+						hg_m = hg_motors[id]
+						hg_m["v"] = float(r.split(';')[id])
+						if id==5: hg_m["v"] = -float(r.split(';')[id])	# send negative value for claw motor angle ()
+
+				except:
+					print("Robot not connected " + url)
+
 	# set 3D mesh with the current motor pos
 	for id, m in enumerate(hg_motors):
-		v = get_v_from_dancing(id)
 		hg_m = hg_motors[id]
+
+		# check if we are getting value from the real root
+		if robot_status == "get_value_from_real_robot":
+			v = hg_m["v"]
+		else:  # sending value to the real robot
+			if app_status == "dancing":
+				v = get_v_from_dancing(id)
 
 		# led
 		led_actual_color = "off"
@@ -221,11 +246,11 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# send the next position to the robot
 		if id == 5:
-			url_set_motor_pos_registers += f"m{id + 1}:compliant:False;m{id + 1}:led:{led_actual_color};"
-			url_set_motor_pos += f"m{id+1}:{-v}:{send_dt};"
+			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if robot_status == 'get_value_from_real_robot' else 'False'};m{id + 1}:led:{led_actual_color};"
+			url_set_motor_pos += f"m{id + 1}:{-v}:{send_dt};"
 		else:
-			url_set_motor_pos_registers += f"m{id + 1}:compliant:False;m{id + 1}:led:{led_actual_color};"
-			url_set_motor_pos += f"m{id+1}:{v}:{send_dt};"
+			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if robot_status == 'get_value_from_real_robot' else 'False'};m{id + 1}:led:{led_actual_color};"
+			url_set_motor_pos += f"m{id + 1}:{v}:{send_dt};"
 
 
 		hg_m["acc"] = lerp(0.1, hg_m["acc"], clamp((hg_m["v"] - v) / (hg.time_to_sec_f(dt)**2), -9999, 9999))
@@ -241,16 +266,18 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		hg_m["n"].GetTransform().SetRot(rot)
 
-	# send value
-	timer_requests_not_overload += hg.time_to_sec_f(dt)
-	if timer_requests_not_overload > send_dt:
-		timer_requests_not_overload = 0
+	# check if we are getting value from the real root
+	if robot_status != "get_value_from_real_robot":
+		# send value
+		timer_requests_not_overload += hg.time_to_sec_f(dt)
+		if timer_requests_not_overload > send_dt:
+			timer_requests_not_overload = 0
 
-		if url != "":
-			try:
-				requests.get(url_set_motor_pos[:-1])
-			except:
-				print("Robot not connected "+url)
+			if url != "":
+				try:
+					requests.get(url_set_motor_pos[:-1])
+				except:
+					print("Robot not connected "+url)
 
 	# led ping pong
 	led_current_motor_timer_ping_pong += hg.time_to_sec_f(dt)
@@ -392,6 +419,18 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					[font_color], [], text_render_state)
 
 	view_id += 1
+
+	# ui choice get value from the robot or inverse
+	hg.ImGuiBeginFrame(res_x, res_y, dt, hg.ReadMouse(), hg.ReadKeyboard())
+	if hg.ImGuiBegin("Poppy"):
+		if hg.ImGuiButton('Choix: Bouger le vrai robot' if robot_status == 'get_value_from_real_robot' else 'Choix: Robot qui danse'):
+			if robot_status == 'get_value_from_real_robot':
+				robot_status = 'send_value_to_robot'
+			else:
+				robot_status = 'get_value_from_real_robot'
+
+	hg.ImGuiEnd()
+	hg.ImGuiEndFrame(view_id)
 
 	current_frame = hg.Frame()
 	hg.UpdateWindow(win)
