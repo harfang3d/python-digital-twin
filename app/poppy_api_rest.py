@@ -2,6 +2,7 @@ import harfang as hg
 import requests
 import socket
 from math import pi
+from statistics import median
 import math
 from OrbitalCam import OrbitalController
 
@@ -39,6 +40,10 @@ mouse = hg.Mouse()
 
 res_x, res_y = 1920, 1080
 
+#initialize lists for toggle button (swipe style)
+mousexlist = []
+mouseylist = []
+
 win = hg.NewWindow("Harfang - Poppy", res_x, res_y, 32)#, hg.WV_Fullscreen)
 hg.RenderInit(win)
 hg.RenderReset(res_x, res_y, hg.RF_MSAA8X | hg.RF_FlipAfterRender | hg.RF_FlushAfterRender | hg.RF_MaxAnisotropy)
@@ -70,6 +75,12 @@ texture_asset1 = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
 target_tex = hg.LoadTextureFromAssets("Asset_2.png", 0)[0]
 texture_asset2 = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+
+target_tex = hg.LoadTextureFromAssets("switch-on.png", 0)[0]
+texture_on = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+
+target_tex = hg.LoadTextureFromAssets("switch-off.png", 0)[0]
+texture_off = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
 
 # load shaders
@@ -185,6 +196,7 @@ if url != "":
 
 # main loop
 current_frame = 0
+has_switched = False
 while not hg.ReadKeyboard().Key(hg.K_Escape):
 	keyboard.Update()
 	mouse.Update()
@@ -418,19 +430,55 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
 					[font_color], [], text_render_state)
 
+	#toggle compliance mode
+	mat = hg.TransformationMat4(hg.Vec3(180, res_y - 70, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+
+	pos = hg.GetT(mat)
+	axis_x = hg.GetX(mat) * 100 / 2
+	axis_y = hg.GetY(mat) * 40 / 2
+
+	toggle_vtx = hg.Vertices(vtx_layout, 4)
+	toggle_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+	toggle_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+	toggle_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+	toggle_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+	toggle_idx = [0, 3, 2, 0, 2, 1]
+
+
+	hg.DrawTriangles(view_id, toggle_idx, toggle_vtx, shader_for_plane, [], [texture_on if robot_status == 'get_value_from_real_robot' else texture_off], render_state_quad)
+
+	if mouse.Down(hg.MB_0):
+		mousexlist.append(mouse.X())
+		mouseylist.append(mouse.Y())
+	else:
+		mousexlist.clear()
+		mouseylist.clear()
+		has_switched = False
+
+	if len(mousexlist) > 20:
+		mousexlist.pop(0)
+	if len(mouseylist) > 20:
+		mouseylist.pop(0)
+
+	if len(mouseylist) > 0:
+		mouse_x = median(mousexlist)
+		mouse_y = median(mouseylist)
+		if mouse_x < 235 and mouse_x > 125 and mouse_y < res_y - 30 and mouse_y > res_y - 100 and not has_switched:
+			robot_status = 'send_value_to_robot' if robot_status == 'get_value_from_real_robot' else 'get_value_from_real_robot'
+			has_switched = True
+			mousexlist.clear()
+			mouseylist.clear()
+	
+	mat = hg.TranslationMat4(hg.Vec3(250, res_y - 80, 1))
+	hg.SetS(mat, hg.Vec3(1, -1, 1))
+	hg.DrawText(view_id,
+					font,
+					"Compliance Mode", shader_font, "u_tex", 0,
+					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
+					[font_color_white], [], text_render_state)
+
 	view_id += 1
 
-	# ui choice get value from the robot or inverse
-	hg.ImGuiBeginFrame(res_x, res_y, dt, hg.ReadMouse(), hg.ReadKeyboard())
-	if hg.ImGuiBegin("Poppy"):
-		if hg.ImGuiButton('Choix: Bouger le vrai robot' if robot_status == 'get_value_from_real_robot' else 'Choix: Robot qui danse'):
-			if robot_status == 'get_value_from_real_robot':
-				robot_status = 'send_value_to_robot'
-			else:
-				robot_status = 'get_value_from_real_robot'
-
-	hg.ImGuiEnd()
-	hg.ImGuiEndFrame(view_id)
 
 	current_frame = hg.Frame()
 	hg.UpdateWindow(win)
