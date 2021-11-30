@@ -38,9 +38,8 @@ def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, hei
 	smoothed_dy += (delta_y - smoothed_dy) * 0.1
 
 	speed = dt_sec * cam_rot_speed
-	if not (mouse.X() < 350 and mouse.X() > 30 and mouse.Y() < height and mouse.Y() > height - 150):
-		cam_rot.x += smoothed_dy * speed
-		cam_rot.y += smoothed_dx * speed
+	cam_rot.x += smoothed_dy * speed
+	cam_rot.y += smoothed_dx * speed
 
 	# clamp X
 

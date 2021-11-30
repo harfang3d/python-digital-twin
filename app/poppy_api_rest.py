@@ -40,9 +40,11 @@ mouse = hg.Mouse()
 
 res_x, res_y = 1920, 1080
 
-#initialize lists for toggle button (swipe style)
+#initialize lists and variables for toggle button (swipe style)
 mousexlist = []
 mouseylist = []
+has_switched = False
+compliance_mode = False
 
 win = hg.NewWindow("Harfang - Poppy", res_x, res_y, 32)#, hg.WV_Fullscreen)
 hg.RenderInit(win)
@@ -155,8 +157,66 @@ hg.ImGuiInit(10, imgui_prg, imgui_img_prg)
 
 app_clock = 0
 app_status = "dancing"
-robot_status = "get_value_from_real_robot"
 
+def toggle_button(label, value, x, y):
+	global has_switched
+	mat = hg.TransformationMat4(hg.Vec3(x, y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+	pos = hg.GetT(mat)
+	axis_x = hg.GetX(mat) * 56
+	axis_y = hg.GetY(mat) * 24
+
+	toggle_vtx = hg.Vertices(vtx_layout, 4)
+	toggle_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+	toggle_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+	toggle_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+	toggle_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+	toggle_idx = [0, 3, 2, 0, 2, 1]
+
+
+	hg.DrawTriangles(view_id, toggle_idx, toggle_vtx, shader_for_plane, [], [texture_on if value else texture_off], render_state_quad)
+
+	if mouse.Down(hg.MB_0):
+		mousexlist.append(mouse.X())
+		mouseylist.append(mouse.Y())
+	else:
+		mousexlist.clear()
+		mouseylist.clear()
+		has_switched = False
+
+	if len(mousexlist) > 20:
+		mousexlist.pop(0)
+	if len(mouseylist) > 20:
+		mouseylist.pop(0)
+
+	if len(mouseylist) > 0:
+		mouse_x = median(mousexlist)
+		mouse_y = median(mouseylist)
+		if mouse_x > pos.x - axis_x.x and mouse_x < pos.x + axis_x.x and mouse_y > pos.y - axis_y.y and mouse_y < pos.y + axis_y.y and not has_switched:
+			value = True if not value else False
+			has_switched = True
+			mousexlist.clear()
+			mouseylist.clear()
+
+	mat = hg.TranslationMat4(hg.Vec3(pos.x + axis_x.x + 10, y - 10, 1))
+	hg.SetS(mat, hg.Vec3(1, -1, 1))
+	hg.DrawText(view_id,
+				font,
+				label, shader_font, "u_tex", 0,
+				mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
+				[font_color_white], [], text_render_state)
+	return value
+
+buttonlist = [[100, res_y - 80]]
+
+def is_switching():
+	for i in buttonlist:
+		mat = hg.TransformationMat4(hg.Vec3(i[0], i[1], 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+		pos = hg.GetT(mat)
+		axis_x = hg.GetX(mat) * 56
+		axis_y = hg.GetY(mat) * 24
+		if (mouse.X() > pos.x - axis_x.x - 10 and mouse.X() < pos.x + axis_x.x + 10 and mouse.Y() > pos.y - axis_y.y - 10 and mouse.Y() < pos.y + axis_y.y + 10 and mouse.Down(hg.MB_0)): # check if mouse is clicked and is within the button area + 10px on every side
+				return True
+	return False
 
 def get_v_from_dancing(id_robot):
 	elapsed_time = app_clock *0.5
@@ -196,7 +256,6 @@ if url != "":
 
 # main loop
 current_frame = 0
-has_switched = False
 while not hg.ReadKeyboard().Key(hg.K_Escape):
 	keyboard.Update()
 	mouse.Update()
@@ -207,7 +266,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	render_was_reset, res_x, res_y = hg.RenderResetToWindow(win, res_x, res_y, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 	res_y = max(res_y, 16)
 	
-	if hg.ImGuiIsWindowFocused():
+	if hg.ImGuiIsWindowFocused() and not is_switching():
 		world, cam_rot, cam_tgt, cam_pos = OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, res_x, res_y)
 		cam.GetTransform().SetWorld(world)
 
@@ -224,7 +283,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	send_dt = 1/10 # send information to the poppy every send_dt
 
 	# get values from the real robot
-	if robot_status == "get_value_from_real_robot":
+	if compliance_mode:
 		timer_requests_not_overload += hg.time_to_sec_f(dt)
 		if timer_requests_not_overload > send_dt:
 			timer_requests_not_overload = 0
@@ -245,7 +304,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		hg_m = hg_motors[id]
 
 		# check if we are getting value from the real root
-		if robot_status == "get_value_from_real_robot":
+		if compliance_mode:
 			v = hg_m["v"]
 		else:  # sending value to the real robot
 			if app_status == "dancing":
@@ -258,10 +317,10 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# send the next position to the robot
 		if id == 5:
-			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if robot_status == 'get_value_from_real_robot' else 'False'};m{id + 1}:led:{led_actual_color};"
+			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if compliance_mode else 'False'};m{id + 1}:led:{led_actual_color};"
 			url_set_motor_pos += f"m{id + 1}:{-v}:{send_dt};"
 		else:
-			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if robot_status == 'get_value_from_real_robot' else 'False'};m{id + 1}:led:{led_actual_color};"
+			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if compliance_mode else 'False'};m{id + 1}:led:{led_actual_color};"
 			url_set_motor_pos += f"m{id + 1}:{v}:{send_dt};"
 
 
@@ -279,7 +338,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		hg_m["n"].GetTransform().SetRot(rot)
 
 	# check if we are getting value from the real root
-	if robot_status != "get_value_from_real_robot":
+	if not compliance_mode:
 		# send value
 		timer_requests_not_overload += hg.time_to_sec_f(dt)
 		if timer_requests_not_overload > send_dt:
@@ -430,52 +489,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
 					[font_color], [], text_render_state)
 
-	#toggle compliance mode
-	mat = hg.TransformationMat4(hg.Vec3(180, res_y - 70, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
-
-	pos = hg.GetT(mat)
-	axis_x = hg.GetX(mat) * 100 / 2
-	axis_y = hg.GetY(mat) * 40 / 2
-
-	toggle_vtx = hg.Vertices(vtx_layout, 4)
-	toggle_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-	toggle_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-	toggle_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-	toggle_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
-	toggle_idx = [0, 3, 2, 0, 2, 1]
-
-
-	hg.DrawTriangles(view_id, toggle_idx, toggle_vtx, shader_for_plane, [], [texture_on if robot_status == 'get_value_from_real_robot' else texture_off], render_state_quad)
-
-	if mouse.Down(hg.MB_0):
-		mousexlist.append(mouse.X())
-		mouseylist.append(mouse.Y())
-	else:
-		mousexlist.clear()
-		mouseylist.clear()
-		has_switched = False
-
-	if len(mousexlist) > 20:
-		mousexlist.pop(0)
-	if len(mouseylist) > 20:
-		mouseylist.pop(0)
-
-	if len(mouseylist) > 0:
-		mouse_x = median(mousexlist)
-		mouse_y = median(mouseylist)
-		if mouse_x < 235 and mouse_x > 125 and mouse_y < res_y - 30 and mouse_y > res_y - 100 and not has_switched:
-			robot_status = 'send_value_to_robot' if robot_status == 'get_value_from_real_robot' else 'get_value_from_real_robot'
-			has_switched = True
-			mousexlist.clear()
-			mouseylist.clear()
-	
-	mat = hg.TranslationMat4(hg.Vec3(250, res_y - 80, 1))
-	hg.SetS(mat, hg.Vec3(1, -1, 1))
-	hg.DrawText(view_id,
-					font,
-					"Compliance Mode", shader_font, "u_tex", 0,
-					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
-					[font_color_white], [], text_render_state)
+	compliance_mode = toggle_button("Compliance Mode ON" if compliance_mode else "Compliance Mode OFF", compliance_mode, 100, res_y - 80)
 
 	view_id += 1
 
