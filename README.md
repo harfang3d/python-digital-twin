@@ -1,6 +1,6 @@
-# HARFANG® 3.0 Poppy Ergo Jr
+# HARFANG® 3D Poppy Ergo Jr
 
-This project demonstrate the usage of the [HARFANG 3.0 API](https://www.harfang3d.com/releases/3.0.0/) in **Python** with the [**Poppy Ergo Junior**](https://www.poppy-project.org/en/robots/poppy-ergo-jr/) robot.
+This project demonstrate the usage of the [HARFANG 3D API](https://www.harfang3d.com/releases/3.1.0/) in **Python** with the [**Poppy Ergo Junior**](https://www.poppy-project.org/en/robots/poppy-ergo-jr/) robot.
 
 [![](https://raw.githubusercontent.com/harfang3d/image-storage/main/portfolio/3.0.0/digital-twin-poppy-ergo-jr-yt.png)](https://www.youtube.com/watch?v=5kzy_JD_1Ag)
 
@@ -11,7 +11,7 @@ This project demonstrate the usage of the [HARFANG 3.0 API](https://www.harfang3
 ```bash
 git clone https://github.com/harfang3d/python-digital-twin poppy
 cd poppy/
-curl https://www.harfang3d.com/releases/3.0.0/assetc-win-x64-3.0.0.zip --output assetc.zip
+curl https://www.harfang3d.com/releases/3.1.0/assetc-win-x64-3.1.0.zip --output assetc.zip
 powershell -command "Expand-Archive assetc.zip assetc"
 pip install -r requirements.txt
 assetc\assetc.exe resources app/resources_compiled
@@ -24,10 +24,10 @@ python poppy_api_rest.py
 ```bash
 git clone https://github.com/harfang3d/python-digital-twin poppy
 cd poppy/
-wget https://www.harfang3d.com/releases/3.0.0/assetc-ubuntu-x64-3.0.0.zip
-unzip assetc-ubuntu-x64-3.0.0.zip -d assetc
-wget https://www.harfang3d.com/releases/3.0.0/harfang-3.0.0-cp32-abi3-linux_x86_64.whl
-python3 -m pip install harfang-3.0.0-cp32-abi3-linux_x86_64.whl
+wget https://www.harfang3d.com/releases/3.1.0/assetc-ubuntu-x64-3.1.0.zip
+unzip assetc-ubuntu-x64-3.1.0.zip -d assetc
+wget https://www.harfang3d.com/releases/3.1.0/harfang-3.1.0-cp32-abi3-linux_x86_64.whl
+python3 -m pip install harfang-3.1.0-cp32-abi3-linux_x86_64.whl
 assetc/assetc resources app/resources_compiled
 cd app
 python3 poppy_api_rest.py
