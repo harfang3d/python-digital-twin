@@ -1,5 +1,11 @@
 {
 	"editor": {
+		"animeditor_plugin": {
+			"quantize_time": true,
+			"show_trajectories": null,
+			"trajectories_tick_seconds": 1.0,
+			"trajectories_tick_size": 0.10000000149011612
+		},
 		"explorer": {
 			"node_custom_order": {
 				"refs": [
@@ -79,19 +85,54 @@
 			"node_sort_method": "custom",
 			"show_node_uid": false
 		},
+		"grid_plugin": {
+			"enabled": true,
+			"grid_color_b": 1.0,
+			"grid_color_g": 1.0,
+			"grid_color_r": 1.0,
+			"n_subdivs": 10,
+			"offset": 0.0,
+			"opacity": 0.5,
+			"subdiv_size": 1.0
+		},
 		"navigation_plugin": {
-			"orbit_distance": 7.700014591217041,
+			"orbit_distance": 8.555571556091309,
 			"speed": 0.009999999776482582,
 			"turbo": 0.0
 		},
 		"transform_gizmo_plugin": {
 			"mode": "local",
+			"snap": "none",
+			"snap_rotation": 5.0,
+			"snap_rotation_fine": 1.0,
+			"snap_scale": 10.0,
+			"snap_scale_fine": 1.0,
+			"snap_translation": 1.0,
+			"snap_translation_fine": 0.10000000149011612,
 			"tool": "move"
 		},
 		"view_plugin": {
-			"show_node_origin": false
+			"show_cameras": true,
+			"show_collisions": false,
+			"show_lights": true,
+			"show_nodes": true,
+			"show_probe": true
 		},
 		"views": {
+			"back": [
+				-0.9999999403953552,
+				0.0,
+				-8.742277657347586e-08,
+				0.0,
+				0.0,
+				1.0,
+				-0.0,
+				0.0,
+				8.742277657347586e-08,
+				-0.0,
+				-0.9999999403953552,
+				0.0
+			],
 			"bottom": [
 				1.0,
 				-0.0,
@@ -110,7 +151,21 @@
 				"zfar": 1000.0,
 				"znear": -1000.0
 			},
-			"current_camera": 0,
+			"current_camera": 7,
+			"front": [
+				1.0,
+				0.0,
+				0.0,
+				0.0,
+				0.0,
+				1.0,
+				-0.0,
+				0.0,
+				0.0,
+				0.0,
+				1.0,
+				0.0
+			],
 			"left": [
 				-8.742277657347586e-08,
 				0.0,
@@ -131,18 +186,18 @@
 			},
 			"orthographic_size": 1.0,
 			"perspective": [
-				-0.147735133767128,
-				-0.2302926927804947,
-				-0.961866557598114,
-				7.029511451721191,
+				0.5722381472587585,
+				-0.24627377092838287,
+				-0.7822629809379578,
+				6.315832614898682,
 				0.0,
-				0.9725270867347717,
-				-0.2328467071056366,
-				2.4434924125671387,
-				0.9890385866165161,
-				-0.0343998447060585,
-				-0.1436781883239746,
-				0.9750180244445801
+				0.9538593888282776,
+				-0.30029773712158203,
+				3.219787836074829,
+				0.8201020956039429,
+				0.17184029519557953,
+				0.54583340883255,
+				-4.801222324371338
 			],
 			"perspective_fov": 0.4173927307128906,
 			"perspective_zrange": {

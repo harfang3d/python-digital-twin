@@ -66,7 +66,6 @@ res = hg.PipelineResources()
 # load scene
 scene = hg.Scene()
 hg.LoadSceneFromAssets("poppy.scn", scene, res, hg.GetForwardPipelineInfo())
-scene.Update(0)
 
 # load texture for the quads
 target_tex = hg.LoadTextureFromAssets("point.png", 0)[0]
@@ -444,7 +443,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
-		motor_pos_2D = hg.ProjectToScreenSpace(view_state.proj, hg.GetT(hg_m["centroid_jauge_world"]) * view_state.view, hg.Vec2(res_x, res_y))[1]
+		motor_pos_2D = view_state.view * hg.ProjectToScreenSpace(view_state.proj, hg.GetT(hg_m["centroid_jauge_world"]), hg.Vec2(res_x, res_y))[1]
 		vtx.Begin(0).SetPos(motor_pos_2D).SetColor0(hg.Color.White).End()
 		vtx.Begin(1).SetPos(hg.Vec3(pos_in_pixel.x - quad_width / 2, pos_in_pixel.y, 1)).SetColor0(hg.Color.White).End()
 
