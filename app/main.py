@@ -265,7 +265,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	render_was_reset, res_x, res_y = hg.RenderResetToWindow(win, res_x, res_y, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 	res_y = max(res_y, 16)
 	
-	if hg.ImGuiIsWindowFocused() and not is_switching():
+	if not is_switching(): # and hg.ImGuiIsWindowFocused() 
 		world, cam_rot, cam_tgt, cam_pos = OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, res_x, res_y)
 		cam.GetTransform().SetWorld(world)
 
@@ -444,6 +444,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
 		motor_pos_2D = view_state.view * hg.ProjectToScreenSpace(view_state.proj, hg.GetT(hg_m["centroid_jauge_world"]), hg.Vec2(res_x, res_y))[1]
+		# print(str(hg.GetT(hg_m["centroid_jauge_world"]).x) + ", " + str(hg.GetT(hg_m["centroid_jauge_world"]).y) + ", " + str(hg.GetT(hg_m["centroid_jauge_world"]).z))
 		vtx.Begin(0).SetPos(motor_pos_2D).SetColor0(hg.Color.White).End()
 		vtx.Begin(1).SetPos(hg.Vec3(pos_in_pixel.x - quad_width / 2, pos_in_pixel.y, 1)).SetColor0(hg.Color.White).End()
 

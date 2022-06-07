@@ -8,8 +8,8 @@
             "name": "Python: Poppy api rest",
             "type": "python",
             "request": "launch",
-            "program": "poppy_api_rest.py",
-            "cwd": "${workspaceFolder}/app",
+            "program": "app/main.py",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }
     ]
