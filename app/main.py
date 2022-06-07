@@ -245,7 +245,6 @@ def get_v_from_dancing(id_robot):
 	""" Compute the sin(t) where t is the elapsed time since the primitive has been started. """
 	return _amp * math.sin(_freq * 2.0 * math.pi * elapsed_time + _phase * math.pi / 180.0) + _offset
 
-
 # send value
 if url != "":
 	try:
@@ -265,7 +264,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	render_was_reset, res_x, res_y = hg.RenderResetToWindow(win, res_x, res_y, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 	res_y = max(res_y, 16)
 	
-	if not is_switching(): # and hg.ImGuiIsWindowFocused() 
+	if not is_switching():
 		world, cam_rot, cam_tgt, cam_pos = OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, res_x, res_y)
 		cam.GetTransform().SetWorld(world)
 
@@ -443,13 +442,14 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
-		motor_pos_2D = view_state.view * hg.ProjectToScreenSpace(view_state.proj, hg.GetT(hg_m["centroid_jauge_world"]), hg.Vec2(res_x, res_y))[1]
-		# print(str(hg.GetT(hg_m["centroid_jauge_world"]).x) + ", " + str(hg.GetT(hg_m["centroid_jauge_world"]).y) + ", " + str(hg.GetT(hg_m["centroid_jauge_world"]).z))
+		pos_view = view_state.view * hg.GetT(hg_m["centroid_jauge_world"])
+		projection = hg.ProjectToScreenSpace(view_state.proj, pos_view, hg.Vec2(res_x, res_y))
+		motor_pos_2D = projection[1]
+
 		vtx.Begin(0).SetPos(motor_pos_2D).SetColor0(hg.Color.White).End()
 		vtx.Begin(1).SetPos(hg.Vec3(pos_in_pixel.x - quad_width / 2, pos_in_pixel.y, 1)).SetColor0(hg.Color.White).End()
 
 		hg.DrawLines(view_id, vtx, shader_for_line)
-
 		# draw percent
 		pos_in_pixel.x -= int(res_y / 35)
 		pos_in_pixel.y -= 10
@@ -470,7 +470,6 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
 
 		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_point], render_state_quad)
-
 
 	# if roboto was not found, add a red text to tell everybody
 	if url == "":
