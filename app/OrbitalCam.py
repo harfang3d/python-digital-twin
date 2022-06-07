@@ -45,8 +45,8 @@ def OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, width, hei
 
 	if cam_rot.x > pi / 2:
 		cam_rot.x = pi / 2
-	if cam_rot.x < 0:
-		cam_rot.x = 0
+	if cam_rot.x < pi / 8:
+		cam_rot.x = pi / 8
 
 
 

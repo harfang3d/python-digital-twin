@@ -1,0 +1,14 @@
+python36.zip
+.
+..\
+..\harfang\
+..\requests\
+..\urllib3\
+..\charset_normalizer\
+..\certifi\
+..\idna\
+..\..\app\
+
+# Uncomment to run site.main() automatically
+#import site
+
