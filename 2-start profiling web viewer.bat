@@ -1,0 +1,2 @@
+vizviewer result.json
+pause

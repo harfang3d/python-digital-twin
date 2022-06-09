@@ -1,6 +1,11 @@
+from random import randint
 import harfang as hg
+import time
 import requests
 import socket
+import threading
+import aiohttp
+import asyncio
 from math import pi
 from statistics import median
 import math
@@ -82,6 +87,10 @@ texture_on = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
 target_tex = hg.LoadTextureFromAssets("switch-off.png", 0)[0]
 texture_off = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+
+target_tex = hg.LoadTextureFromFile("camera.png", 0)[0]
+texture_camera = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+camera_update_clock = 0
 
 
 # load shaders
@@ -245,6 +254,27 @@ def get_v_from_dancing(id_robot):
 	""" Compute the sin(t) where t is the elapsed time since the primitive has been started. """
 	return _amp * math.sin(_freq * 2.0 * math.pi * elapsed_time + _phase * math.pi / 180.0) + _offset
 
+async def update_webcam_data():
+	global texture_camera, app_clock, camera_update_clock
+	while True:
+		if url != "":
+			try:
+				async with aiohttp.ClientSession() as session:
+					async with session.get(url + "/frame.png") as response:
+						result = await response.read()
+						file = open("camera.png", "wb")
+						file.write(result)
+						file.close()
+						target_tex = hg.LoadTextureFromFile("camera.png", 0)[0]
+						texture_camera = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
+						camera_update_clock = app_clock
+						await time.sleep(0.2)
+			except:
+				print("Robot not connected "+url)
+
+t1 = threading.Thread(target=asyncio.run, args=(update_webcam_data(),))
+t1.start()
+
 # send value
 if url != "":
 	try:
@@ -258,6 +288,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	keyboard.Update()
 	mouse.Update()
 	dt = hg.TickClock()
+
 
 	app_clock += hg.time_to_sec_f(dt)
 
@@ -335,7 +366,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		hg_m["n"].GetTransform().SetRot(rot)
 
-	# check if we are getting value from the real root
+	# # check if we are getting value from the real root
 	if not compliance_mode:
 		# send value
 		timer_requests_not_overload += hg.time_to_sec_f(dt)
@@ -471,7 +502,35 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_point], render_state_quad)
 
+
+	# draw and update camera img
+	if url != "":
+		try:
+			quad_width = 400
+			quad_height = 300
+			mat = hg.TransformationMat4(hg.Vec3(quad_width / 2, quad_height / 2, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+
+			pos = hg.GetT(mat)
+			axis_x = hg.GetX(mat) * quad_width / 2
+			axis_y = hg.GetY(mat) * quad_height / 2
+
+			quad_vtx = hg.Vertices(vtx_layout, 4)
+			quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+			quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+			quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+			quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+			quad_idx = [0, 3, 2, 0, 2, 1]
+
+			color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
+
+			hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_camera], render_state_quad)
+
+		except:
+			print("Robot not connected "+url)
+
+
 	# if roboto was not found, add a red text to tell everybody
+
 	if url == "":
 		mat = hg.TranslationMat4(hg.Vec3(14, 48, 1))
 		hg.SetS(mat, hg.Vec3(1, -1, 1))
