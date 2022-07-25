@@ -9,6 +9,8 @@ from OrbitalCam import OrbitalController
 str_error = "The robot is not connected"
 
 # helpers
+
+
 def clamp(v, v_min, v_max):
 	return max(v_min, min(v, v_max))
 
@@ -23,6 +25,7 @@ def rangeadjust(k, a, b, u, v):
 
 def lerp(k, a, b):
 	return a + (b - a) * k
+
 
 # look for the poppy on the network
 url = ""
@@ -40,15 +43,18 @@ mouse = hg.Mouse()
 
 res_x, res_y = 1920, 1080
 
-#initialize lists and variables for toggle button (swipe style)
+# initialize lists and variables for toggle button (swipe style)
 mousexlist = []
 mouseylist = []
 has_switched = False
 compliance_mode = False
+compliance_lerp = True
 
-win = hg.NewWindow("Harfang - Poppy", res_x, res_y, 32)#, hg.WV_Fullscreen)
+
+win = hg.NewWindow("Harfang - Poppy", res_x, res_y, 32)  # , hg.WV_Fullscreen)
 hg.RenderInit(win)
-hg.RenderReset(res_x, res_y, hg.RF_MSAA8X | hg.RF_FlipAfterRender | hg.RF_FlushAfterRender | hg.RF_MaxAnisotropy)
+hg.RenderReset(res_x, res_y, hg.RF_MSAA8X | hg.RF_FlipAfterRender |
+			   hg.RF_FlushAfterRender | hg.RF_MaxAnisotropy)
 
 hg.AddAssetsFolder("resources_compiled")
 
@@ -85,9 +91,12 @@ texture_off = hg.MakeUniformSetTexture("s_texTexture", target_tex, 0)
 
 
 # load shaders
-render_state_quad = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
-render_state_quad_occluded = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
-render_state_line = hg.ComputeRenderState(hg.BM_Opaque, hg.DT_Less, hg.FC_Disabled)
+render_state_quad = hg.ComputeRenderState(
+	hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
+render_state_quad_occluded = hg.ComputeRenderState(
+	hg.BM_Alpha, hg.DT_Less, hg.FC_Disabled)
+render_state_line = hg.ComputeRenderState(
+	hg.BM_Opaque, hg.DT_Less, hg.FC_Disabled)
 shader_rotator = hg.LoadProgramFromAssets("shaders/rotator")
 shader_for_plane = hg.LoadProgramFromAssets("shaders/texture")
 shader_for_line = hg.LoadProgramFromAssets("shaders/pos_rgb")
@@ -96,21 +105,32 @@ vtx_layout = hg.VertexLayoutPosFloatTexCoord0UInt8()
 vtx_line_layout = hg.VertexLayoutPosFloatColorUInt8()
 
 # load font
-font = hg.LoadFontFromAssets("Roboto-Regular.ttf", 36, 1024, 1, "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ")
-text_render_state = hg.ComputeRenderState(hg.BM_Alpha, hg.DT_Always, hg.FC_Disabled, False)
+font = hg.LoadFontFromAssets("Roboto-Regular.ttf", 36, 1024, 1,
+							 "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ")
+text_render_state = hg.ComputeRenderState(
+	hg.BM_Alpha, hg.DT_Always, hg.FC_Disabled, False)
 font_color = hg.MakeUniformSetValue("u_color", hg.Vec4(1.0, 0.75, 0.2, 1.0))
-font_color_white = hg.MakeUniformSetValue("u_color", hg.Vec4(1.0, 1.0, 1.0, 1.0))
+font_color_white = hg.MakeUniformSetValue(
+	"u_color", hg.Vec4(1.0, 1.0, 1.0, 1.0))
 font_shadow = hg.MakeUniformSetValue("u_color", hg.Vec4(0.0, 0.0, 0.0, 1.0))
 
 # array for each motor node and rotation axis choice
 hg_motors = [
-	{"n": scene.GetNode("bras_1"), "acc": 0, "v": 0, "axis": "Y", "lower_limit": -150, "upper_limit": 150, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.12, 0.12, 1, 1), "offset_slider": hg.Vec3(0, 0, 1), "offset_rotation": hg.Vec3(0, 0, 0), "axis_tex_big": True},
-	{"n": scene.GetNode("bras_2"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -125, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 1.57, 0), "axis_tex_big": False},
-	{"n": scene.GetNode("bras_3"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 1.57, 0), "axis_tex_big": False},
-	{"n": scene.GetNode("bras_4"), "acc": 0, "v": 0, "axis": "Z", "lower_limit": -150, "upper_limit": 150, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.06, 0.06, 1, 1), "offset_slider": hg.Vec3(0, 1, 0), "offset_rotation": hg.Vec3(0, 0, 0), "axis_tex_big": True},
-	{"n": scene.GetNode("bras_5"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 0, 1.57), "axis_tex_big": False},
-	{"n": scene.GetNode("bras_6"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 110, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 0, 1.57), "axis_tex_big": False},
+	{"n": scene.GetNode("bras_1"), "acc": 0, "v": 0, "axis": "Y", "lower_limit": -150, "upper_limit": 150, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.12, 0.12, 1, 1), "offset_slider": hg.Vec3(0, 0, 1), "offset_rotation": hg.Vec3(0, 0, 0), "axis_tex_big": True},
+	{"n": scene.GetNode("bras_2"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -125, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 1.57, 0), "axis_tex_big": False},
+	{"n": scene.GetNode("bras_3"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 1.57, 0), "axis_tex_big": False},
+	{"n": scene.GetNode("bras_4"), "acc": 0, "v": 0, "axis": "Z", "lower_limit": -150, "upper_limit": 150, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.06, 0.06, 1, 1), "offset_slider": hg.Vec3(0, 1, 0), "offset_rotation": hg.Vec3(0, 0, 0), "axis_tex_big": True},
+	{"n": scene.GetNode("bras_5"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 90, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 0, 1.57), "axis_tex_big": False},
+	{"n": scene.GetNode("bras_6"), "acc": 0, "v": 0, "axis": "X", "lower_limit": 110, "upper_limit": -90, "new_position": 0.0, "quad_jauge_axis": hg.CreatePlaneModel(
+		vtx_layout, 0.03, 0.03, 1, 1), "offset_slider": hg.Vec3(1, 0, 0), "offset_rotation": hg.Vec3(-1.57, 0, 1.57), "axis_tex_big": False},
 ]
+
+hg_motors_previous = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
 
 led_colors = [
 	"off",
@@ -140,7 +160,8 @@ if cam is None:
 	cam = scene.CreateNode()
 	cam.SetName("Camera")
 	cam.SetTransform(scene.CreateTransform())
-	cam.GetTransform().SetWorld(hg.TransformationMat4(hg.Vec3(0, 1000, 0), hg.Vec3(0, 0, 0)))
+	cam.GetTransform().SetWorld(hg.TransformationMat4(
+		hg.Vec3(0, 1000, 0), hg.Vec3(0, 0, 0)))
 	cam.SetCamera(scene.CreateCamera(0.1, 10000))
 
 scene.SetCurrentCamera(cam)
@@ -157,22 +178,28 @@ hg.ImGuiInit(10, imgui_prg, imgui_img_prg)
 app_clock = 0
 app_status = "dancing"
 
+
 def toggle_button(label, value, x, y):
 	global has_switched
-	mat = hg.TransformationMat4(hg.Vec3(x, y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+	mat = hg.TransformationMat4(
+		hg.Vec3(x, y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
 	pos = hg.GetT(mat)
 	axis_x = hg.GetX(mat) * 56
 	axis_y = hg.GetY(mat) * 24
 
 	toggle_vtx = hg.Vertices(vtx_layout, 4)
-	toggle_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-	toggle_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-	toggle_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-	toggle_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+	toggle_vtx.Begin(0).SetPos(
+		pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+	toggle_vtx.Begin(1).SetPos(
+		pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+	toggle_vtx.Begin(2).SetPos(
+		pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+	toggle_vtx.Begin(3).SetPos(
+		pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
 	toggle_idx = [0, 3, 2, 0, 2, 1]
 
-
-	hg.DrawTriangles(view_id, toggle_idx, toggle_vtx, shader_for_plane, [], [texture_on if value else texture_off], render_state_quad)
+	hg.DrawTriangles(view_id, toggle_idx, toggle_vtx, shader_for_plane, [], [
+		texture_on if value else texture_off], render_state_quad)
 
 	if mouse.Down(hg.MB_0):
 		mousexlist.append(mouse.X())
@@ -205,20 +232,25 @@ def toggle_button(label, value, x, y):
 				[font_color_white], [], text_render_state)
 	return value
 
+
 buttonlist = [[100, res_y - 80]]
+
 
 def is_switching():
 	for i in buttonlist:
-		mat = hg.TransformationMat4(hg.Vec3(i[0], i[1], 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+		mat = hg.TransformationMat4(
+			hg.Vec3(i[0], i[1], 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
 		pos = hg.GetT(mat)
 		axis_x = hg.GetX(mat) * 56
 		axis_y = hg.GetY(mat) * 24
-		if (mouse.X() > pos.x - axis_x.x - 10 and mouse.X() < pos.x + axis_x.x + 10 and mouse.Y() > pos.y - axis_y.y - 10 and mouse.Y() < pos.y + axis_y.y + 10 and mouse.Down(hg.MB_0)): # check if mouse is clicked and is within the button area + 10px on every side
-				return True
+		# check if mouse is clicked and is within the button area + 10px on every side
+		if (mouse.X() > pos.x - axis_x.x - 10 and mouse.X() < pos.x + axis_x.x + 10 and mouse.Y() > pos.y - axis_y.y - 10 and mouse.Y() < pos.y + axis_y.y + 10 and mouse.Down(hg.MB_0)):
+			return True
 	return False
 
+
 def get_v_from_dancing(id_robot):
-	elapsed_time = app_clock *0.5
+	elapsed_time = app_clock * 0.5
 	_amp = 1
 	_freq = 0.5
 	_offset = 0
@@ -245,6 +277,7 @@ def get_v_from_dancing(id_robot):
 	""" Compute the sin(t) where t is the elapsed time since the primitive has been started. """
 	return _amp * math.sin(_freq * 2.0 * math.pi * elapsed_time + _phase * math.pi / 180.0) + _offset
 
+
 # send value
 if url != "":
 	try:
@@ -261,24 +294,28 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 	app_clock += hg.time_to_sec_f(dt)
 
-	render_was_reset, res_x, res_y = hg.RenderResetToWindow(win, res_x, res_y, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
+	render_was_reset, res_x, res_y = hg.RenderResetToWindow(
+		win, res_x, res_y, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 	res_y = max(res_y, 16)
-	
+
 	if not is_switching():
-		world, cam_rot, cam_tgt, cam_pos = OrbitalController(keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, res_x, res_y)
+		world, cam_rot, cam_tgt, cam_pos = OrbitalController(
+			keyboard, mouse, cam_pos, cam_rot, cam_tgt, dt, res_x, res_y)
 		cam.GetTransform().SetWorld(world)
 
 	scene.Update(dt)
 	new_pass_views = hg.SceneForwardPipelinePassViewId()
 	view_id = 0
-	view_id, pass_ids = hg.SubmitSceneToPipeline(view_id, scene, hg.IntRect(0, 0, res_x, res_y), True, pipeline, res, pipeline_aaa, aaa_config, current_frame)
+	view_id, pass_ids = hg.SubmitSceneToPipeline(view_id, scene, hg.IntRect(
+		0, 0, res_x, res_y), True, pipeline, res, pipeline_aaa, aaa_config, current_frame)
 
-	view_state = scene.ComputeCurrentCameraViewState(hg.ComputeAspectRatioX(res_x, res_y))
+	view_state = scene.ComputeCurrentCameraViewState(
+		hg.ComputeAspectRatioX(res_x, res_y))
 
 	# api poppy
 	url_set_motor_pos_registers = url + "/motors/set/registers/"
 	url_set_motor_pos = url + "/motors/set/goto/"
-	send_dt = 1/10 # send information to the poppy every send_dt
+	send_dt = 1/10  # send information to the poppy every send_dt
 
 	# get values from the real robot
 	if compliance_mode:
@@ -291,8 +328,12 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					r = requests.get(url + "/motors/get/positions").text
 					for id, m in enumerate(hg_motors):
 						hg_m = hg_motors[id]
+						hg_motors_previous[id][0] = hg_m["v"]
+						hg_motors_previous[id][1] = hg.GetClock()
 						hg_m["v"] = float(r.split(';')[id])
-						if id==5: hg_m["v"] = -float(r.split(';')[id])	# send negative value for claw motor angle ()
+						if id == 5:
+							# send negative value for claw motor angle ()
+							hg_m["v"] = -float(r.split(';')[id])
 
 				except:
 					print("Robot not connected " + url)
@@ -321,19 +362,37 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 			url_set_motor_pos_registers += f"m{id + 1}:compliant:{'True' if compliance_mode else 'False'};m{id + 1}:led:{led_actual_color};"
 			url_set_motor_pos += f"m{id + 1}:{v}:{send_dt};"
 
-
-		hg_m["acc"] = lerp(0.1, hg_m["acc"], clamp((hg_m["v"] - v) / (hg.time_to_sec_f(dt)**2), -9999, 9999))
+		hg_m["acc"] = lerp(0.1, hg_m["acc"], clamp(
+			(hg_m["v"] - v) / (hg.time_to_sec_f(dt)**2), -9999, 9999))
 		hg_m["v"] = v
-		# set the position to the virtual robot
-		rot = hg.Vec3(0, 0, 0)
-		if hg_m["axis"] == "X":
-			rot = hg.Vec3(-v*pi/180.0, 0, 0)
-		elif hg_m["axis"] == "Y":
-			rot = hg.Vec3(0, -v*pi/180.0, 0)
-		elif hg_m["axis"] == "Z":
-			rot = hg.Vec3(-1.57, 0, -v*pi/180.0)
 
-		hg_m["n"].GetTransform().SetRot(rot)
+		if compliance_mode and compliance_lerp:
+			adjusted_time = rangeadjust(hg.GetClock(
+			), hg_motors_previous[id][1], hg_motors_previous[id][1] + hg.time_from_sec_f(send_dt), 0, 1)
+			if adjusted_time < 1.0:
+				# interpolate previous rotation with current one based on elapsed time between both
+				new_v = lerp(adjusted_time, hg_motors_previous[id][0], v)
+				# set the position to the virtual robot
+				rot = hg.Vec3(0, 0, 0)
+				if hg_m["axis"] == "X":
+					rot = hg.Vec3(-new_v*pi/180.0, 0, 0)
+				elif hg_m["axis"] == "Y":
+					rot = hg.Vec3(0, -new_v*pi/180.0, 0)
+				elif hg_m["axis"] == "Z":
+					rot = hg.Vec3(-1.57, 0, -new_v*pi/180.0)
+
+				hg_m["n"].GetTransform().SetRot(rot)
+
+		else:
+			rot = hg.Vec3(0, 0, 0)
+			if hg_m["axis"] == "X":
+				rot = hg.Vec3(-v*pi/180.0, 0, 0)
+			elif hg_m["axis"] == "Y":
+				rot = hg.Vec3(0, -v*pi/180.0, 0)
+			elif hg_m["axis"] == "Z":
+				rot = hg.Vec3(-1.57, 0, -v*pi/180.0)
+
+			hg_m["n"].GetTransform().SetRot(rot)
 
 	# check if we are getting value from the real root
 	if not compliance_mode:
@@ -369,8 +428,10 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 				print("Robot not connected "+url)
 
 	# draw ui
-	view_id_scene_opaque = hg.GetSceneForwardPipelinePassViewId(pass_ids, hg.SFPP_Opaque)
-	view_id_scene_alpha = hg.GetSceneForwardPipelinePassViewId(pass_ids, hg.SFPP_Transparent)
+	view_id_scene_opaque = hg.GetSceneForwardPipelinePassViewId(
+		pass_ids, hg.SFPP_Opaque)
+	view_id_scene_alpha = hg.GetSceneForwardPipelinePassViewId(
+		pass_ids, hg.SFPP_Transparent)
 
 	cam_world = cam.GetTransform().GetWorld()
 
@@ -382,7 +443,8 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 		# set the position to the virtual robot
 		m_world = hg_m["n"].GetTransform().GetWorld()
 		m_pos = hg.GetT(m_world)
-		m_world_rot = hg.GetR(hg_m["n"].GetTransform().GetParent().GetTransform().GetWorld())
+		m_world_rot = hg.GetR(
+			hg_m["n"].GetTransform().GetParent().GetTransform().GetWorld())
 		m_world_scale = hg.GetS(m_world)
 
 		if hg_m["offset_slider"].x == 1:
@@ -393,12 +455,15 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 			m_pos += hg.GetY(m_world) * 0.003
 
 		# draw jauge in axis
-		m_world = hg.TransformationMat4(m_pos, m_world_rot, m_world_scale) * hg.RotationMat4(hg_m["offset_rotation"])
+		m_world = hg.TransformationMat4(
+			m_pos, m_world_rot, m_world_scale) * hg.RotationMat4(hg_m["offset_rotation"])
 		hg_m["centroid_jauge_world"] = m_world
 
-		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(
+			rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
 
-		hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_rotator, [progress], [texture_asset1], m_world, render_state_quad_occluded)
+		hg.DrawModel(view_id_scene_alpha, hg_m["quad_jauge_axis"], shader_rotator, [
+			progress], [texture_asset1], m_world, render_state_quad_occluded)
 
 	# draw 2D jauge
 	# set 2D view
@@ -407,7 +472,8 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 	hg.SetViewRect(view_id, 0, 0, res_x, res_y)
 	hg.SetViewClear(view_id, 0, 0, 1.0, 0)
 
-	vs = hg.ComputeOrthographicViewState(hg.TranslationMat4(hg.Vec3(res_x / 2, res_y / 2, 0)), res_y, 0.1, 100, hg.Vec2(res_x / res_y, 1))
+	vs = hg.ComputeOrthographicViewState(hg.TranslationMat4(
+		hg.Vec3(res_x / 2, res_y / 2, 0)), res_y, 0.1, 100, hg.Vec2(res_x / res_y, 1))
 	hg.SetViewTransform(view_id, vs.view, vs.proj)
 
 	for id, m in enumerate(hg_motors):
@@ -419,35 +485,45 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		# texture quad
 		quad_width = quad_height = res_y * 0.12
-		pos_in_pixel = hg.iVec2(int(res_x - quad_width * 1.1), int((res_y * 0.05) + (res_y * 0.9)/len(hg_motors) * id + (quad_height * 1.2) / 2))
+		pos_in_pixel = hg.iVec2(int(res_x - quad_width * 1.1), int(
+			(res_y * 0.05) + (res_y * 0.9)/len(hg_motors) * id + (quad_height * 1.2) / 2))
 
-		#setup quad vertices
-		mat = hg.TransformationMat4(hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
+		# setup quad vertices
+		mat = hg.TransformationMat4(
+			hg.Vec3(pos_in_pixel.x, pos_in_pixel.y, 1), hg.Vec3(0, 0, 0), hg.Vec3(1, 1, 1))
 
 		pos = hg.GetT(mat)
 		axis_x = hg.GetX(mat) * quad_width / 2
 		axis_y = hg.GetY(mat) * quad_height / 2
 
 		quad_vtx = hg.Vertices(vtx_layout, 4)
-		quad_vtx.Begin(0).SetPos(pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
-		quad_vtx.Begin(1).SetPos(pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
-		quad_vtx.Begin(2).SetPos(pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
-		quad_vtx.Begin(3).SetPos(pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
+		quad_vtx.Begin(0).SetPos(
+			pos - axis_x - axis_y).SetTexCoord0(hg.Vec2(0, 1)).End()
+		quad_vtx.Begin(1).SetPos(
+			pos - axis_x + axis_y).SetTexCoord0(hg.Vec2(0, 0)).End()
+		quad_vtx.Begin(2).SetPos(
+			pos + axis_x + axis_y).SetTexCoord0(hg.Vec2(1, 0)).End()
+		quad_vtx.Begin(3).SetPos(
+			pos + axis_x - axis_y).SetTexCoord0(hg.Vec2(1, 1)).End()
 		quad_idx = [0, 3, 2, 0, 2, 1]
 
 		# draw quad
-		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
+		progress = hg.MakeUniformSetValue("uProgress", hg.Vec4(
+			rangeadjust_clamp(v, -180, 180, 0, 100)/100, 0, 0, 0))
 
-		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [progress], [texture_asset2], render_state_quad)
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_rotator, [
+			progress], [texture_asset2], render_state_quad)
 
 		# # draw line in 2D
 		vtx = hg.Vertices(vtx_line_layout, 2)
 		pos_view = view_state.view * hg.GetT(hg_m["centroid_jauge_world"])
-		projection = hg.ProjectToScreenSpace(view_state.proj, pos_view, hg.Vec2(res_x, res_y))
+		projection = hg.ProjectToScreenSpace(
+			view_state.proj, pos_view, hg.Vec2(res_x, res_y))
 		motor_pos_2D = projection[1]
 
 		vtx.Begin(0).SetPos(motor_pos_2D).SetColor0(hg.Color.White).End()
-		vtx.Begin(1).SetPos(hg.Vec3(pos_in_pixel.x - quad_width / 2, pos_in_pixel.y, 1)).SetColor0(hg.Color.White).End()
+		vtx.Begin(1).SetPos(hg.Vec3(pos_in_pixel.x - quad_width / 2,
+									pos_in_pixel.y, 1)).SetColor0(hg.Color.White).End()
 
 		hg.DrawLines(view_id, vtx, shader_for_line)
 		# draw percent
@@ -458,18 +534,22 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 
 		hg.DrawText(view_id,
 					font,
-					'{n} °'.format(n = int(rangeadjust_clamp(v, -180, 180, 0, 360))), shader_font, "u_tex", 0,
-					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
-					[font_color_white], [], text_render_state)	
+					'{n} °'.format(n=int(rangeadjust_clamp(
+						v, -180, 180, 0, 360))), shader_font, "u_tex", 0,
+					mat, hg.Vec3(
+						0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
+					[font_color_white], [], text_render_state)
 
 		# draw central point on motor
 		quad_width = 8
 		quad_height = 8
 		pos_in_pixel = motor_pos_2D
 
-		color = hg.MakeUniformSetValue("uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
+		color = hg.MakeUniformSetValue(
+			"uTextureColor", hg.Vec4(-1.0, 0, 0, 1.0))
 
-		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [texture_point], render_state_quad)
+		hg.DrawTriangles(view_id, quad_idx, quad_vtx, shader_for_plane, [], [
+			texture_point], render_state_quad)
 
 	# if roboto was not found, add a red text to tell everybody
 	if url == "":
@@ -479,7 +559,7 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					font,
 					str_error, shader_font, "u_tex", 0,
 					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
-					[font_shadow], [], text_render_state)		
+					[font_shadow], [], text_render_state)
 		mat = hg.TranslationMat4(hg.Vec3(15, 50, 1))
 		hg.SetS(mat, hg.Vec3(1, -1, 1))
 		hg.DrawText(view_id,
@@ -488,10 +568,13 @@ while not hg.ReadKeyboard().Key(hg.K_Escape):
 					mat, hg.Vec3(0, 0, 0), hg.DTHA_Left, hg.DTVA_Top,
 					[font_color], [], text_render_state)
 
-	compliance_mode = toggle_button("Compliance Mode ON" if compliance_mode else "Compliance Mode OFF", compliance_mode, 100, res_y - 80)
+	compliance_mode = toggle_button(
+		"Compliance Mode ON" if compliance_mode else "Compliance Mode OFF", compliance_mode, 100, res_y - 80)
+	if compliance_mode:
+		compliance_lerp = toggle_button(
+		"Motion Interpolation ON" if compliance_lerp else "Motion Interpolation OFF", compliance_lerp, 100, res_y - 180)
 
 	view_id += 1
-
 
 	current_frame = hg.Frame()
 	hg.UpdateWindow(win)
