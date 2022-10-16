@@ -2,7 +2,7 @@
 
 This project demonstrate the usage of the [HARFANG 3D API](https://www.harfang3d.com/releases/3.1.0/) in **Python** with the [**Poppy Ergo Junior**](https://www.poppy-project.org/en/robots/poppy-ergo-jr/) robot.
 
-[![](https://raw.githubusercontent.com/harfang3d/image-storage/main/portfolio/3.0.0/digital-twin-poppy-ergo-jr-yt.png)](https://www.youtube.com/watch?v=5kzy_JD_1Ag)
+[![](https://raw.githubusercontent.com/harfang3d/image-storage/main/portfolio/3.0.0/digital-twin-poppy-ergo-jr-yt.png)](https://www.youtube.com/watch?v=IJS9GMP9h9Y)
 
 ## To run the project:
 
